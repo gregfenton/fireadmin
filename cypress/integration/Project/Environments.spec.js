@@ -60,7 +60,7 @@ describe('Project - Environments Page', () => {
       )
       // Verify new environment was added to Firestore with correct data
       cy.callFirestore('get', 'projects/test-project/environments').then(
-        environments => {
+        (environments) => {
           expect(environments).to.be.an('array')
           const matchingEnv = find(environments, { name: newProjectName })
           expect(matchingEnv).to.exist
@@ -97,10 +97,8 @@ describe('Project - Environments Page', () => {
       )
       // Confirm that deleted environment is no longer within Firestore
       cy.callFirestore('get', 'projects/test-project/environments').then(
-        environments => {
-          expect(environments).to.be.an('array')
-          const matchingEnv = find(environments, { name: newEnvName })
-          expect(matchingEnv).to.not.exist
+        (environments) => {
+          expect(environments).to.be.null
         }
       )
     })

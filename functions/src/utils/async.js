@@ -16,7 +16,7 @@
  * }
  */
 export function to(promise) {
-  return promise.then(data => [null, data]).catch(err => [err])
+  return promise.then((data) => [null, data]).catch((err) => [err])
 }
 
 /**
@@ -26,7 +26,10 @@ export function to(promise) {
  */
 export function promiseWaterfall(callbacks) {
   return callbacks.reduce(
-    (accumulator, callback) => accumulator.then(callback),
+    (accumulator, callback) =>
+      accumulator.then(
+        typeof callback === 'function' ? callback : () => callback
+      ),
     Promise.resolve()
   )
 }
@@ -38,7 +41,7 @@ export function promiseWaterfall(callbacks) {
  */
 export function wait(timeToWait = 10) {
   // Wait 10ms before next stage
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     setTimeout(resolve, timeToWait)
   })
 }

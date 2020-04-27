@@ -22,14 +22,14 @@ async function removeCollection(collectionSnap) {
     `Removing ${collectionQueryResult.size} docs from the "${collectionSnap.id}" subcollection`
   )
   const docRefs = []
-  collectionQueryResult.forEach(doc => {
+  collectionQueryResult.forEach((doc) => {
     docRefs.push(doc)
   })
 
   // Remove all documents from collection (removing the document's
   // subcollections first if they exist)
   return Promise.all(
-    docRefs.map(async docSnap => {
+    docRefs.map(async (docSnap) => {
       // Remove all subcollections before deleting document
       const [deleteSubcollectionsErr] = await to(
         removeAllCollections(docSnap.ref)
@@ -40,7 +40,7 @@ async function removeCollection(collectionSnap) {
           `Error deleting doc: "${collectionSnap.id}/${docSnap.id}"`,
           deleteSubcollectionsErr
         )
-        // Continue on to deleting docment anyway
+        // Continue on to deleting document anyway
       }
       // Delete document
       const [deleteErr] = await to(docSnap.ref.delete())
@@ -67,6 +67,7 @@ async function removeAllCollections(docRef) {
     throw new Error('docRef.getCollections does not exist')
   }
   // all collection names
+  // TODO: listCollections (including updating tests)
   const [getCollectionsErr, collectionSnaps] = await to(docRef.getCollections())
   // Handle errors in batch write
   if (getCollectionsErr) {
@@ -80,9 +81,10 @@ async function removeAllCollections(docRef) {
   if (!collectionSnaps.length) {
     return null
   }
+  // TODO: Switch to using .map directly on list of subcollection refs
   // Add each collection snap to a snaps array
   const snaps = []
-  collectionSnaps.forEach(collectionSnap => {
+  collectionSnaps.forEach((collectionSnap) => {
     snaps.push(collectionSnap)
   })
   // Remove each collection
